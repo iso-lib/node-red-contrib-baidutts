@@ -1,0 +1,20 @@
+{
+  "name": "node-red-contrib-baidu-tts",
+  "description": "node red node for baidu tts",
+  "license": "MIT",
+  "main": "baidu_tts.js",
+  "author": "baidu-aip",
+  "node-red": {
+    "nodes": {
+      "baidu-tts": "baidu_tts.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iso-lib/node-red-contrib-baidu-tts.git"
+  },
+  "dependencies": {
+    "baidu-aip-sdk": "^2.0.0"
+  },
+  "version": "1.0.0"
+}

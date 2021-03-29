@@ -1,0 +1,85 @@
+<script type="text/javascript">
+    RED.nodes.registerType('baidu-tts',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            server: {value:"", type:"baidu-tts-server"},
+            data: {value:""}, 
+            action: { value: "tts" }
+        },
+        inputs:1,
+        outputs:1,
+        icon: " function.png",
+        label: function() {
+            return this.name|| "百度TTS";
+        },
+    });
+
+    RED.nodes.registerType('baidu-tts-server',{
+        category: 'config',
+        defaults: {
+            name : { value:"默认百度配置",required:true},
+            apiKey : { value:"", required:true},
+            secretKey : { value:"", required:true},
+        },
+        label: function() {
+            return this.name;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="baidu-tts">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-tag"></i> Server</label>
+        <input type="text" id="node-input-server" placeholder="Server">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-action"><i class="icon-tag"></i>类型</label>
+        <input type="text" id="node-input-action" maxlength='78' placeholder="TTS">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-data"><i class="icon-tag"></i>TTS 文本</label>
+        <input type="text" id="node-input-data" maxlength='78' placeholder="(msg.data)">
+    </div>
+
+    <div class="form-row">
+        <label style="width: 100%;text-align: center;box-sizing: border-box;" >
+          <a href="https://bbs.iobroker.cn" target="_blank">由smarthomefans小组开发，使用中如有疑惑请点击此链接访问开发组主页。</a>
+        </label>
+    </div>
+
+</script>
+
+
+<script type="text/x-red" data-help-name="baidu-tts">
+    <p>百度TTS配置</p>
+    <p>可以在前一个节点配置tts文本</p>
+    <p>msg.data = '你好,我是百度语音合成工具' 本文框直接填写 {{payload}} 会播报上个节点 msg.payload 信息</p>
+
+
+
+</script>
+
+
+<script type="text/x-red" data-template-name="baidu-tts-server">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-bookmark"></i> 默认名称</label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apiKey"><i class="icon-bookmark"></i>apiKey </label>
+        <input type="text" id="node-config-input-apiKey">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-secretKey"><i class="icon-bookmark"></i>secretKey</label>
+        <input type="text" id="node-config-input-secretKey">
+    </div>
+   
+</script>
+
+<script type="text/x-red" data-help-name="baidu-tts-server">
+    <p>百度TTS需要配置apiKey和secretKey,去百度开发者网站新建应用后获取</p>
+    <p>分享节点的时候一定要注意,要修改一下这里的配置,不然就暴露了</p>
+</script>
