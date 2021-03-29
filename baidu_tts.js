@@ -18,7 +18,7 @@ module.exports = function (RED) {
 		let baidu_apiKey = this.server.apiKey;
 		let baidu_secretKey = this.server.secretKey;
 		
-		let client = new AipSpeech(0, baidu_apiKey, baidu_secretKey);
+		let client = new AipSpeech(16193101, baidu_apiKey, baidu_secretKey);
 
 		//let voice = fs.readFileSync('../assets/16k_test.pcm');
 		//let voice = fs.readFileSync("assets");
