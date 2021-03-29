@@ -28,7 +28,7 @@ module.exports = function (RED) {
 			var payload = {};
 			var data = msg.data;
 			// 语音合成，保存到本地文件
-			client.text2audio(data, {spd: 0, per: 4}).then(function(result) {
+			client.text2audio(data, {spd: 3, per: 4}).then(function(result) {
 				if (result.data) {
 					fs.writeFileSync('tts.mp3', result.data);
 					node.log('语音合成成功，文件保存到tts.mp3，打开听听吧');
@@ -38,7 +38,7 @@ module.exports = function (RED) {
 				node.log('语音合成失败: ' + JSON.stringify(result));
 				}
 			}, function(err) {
-				return
+				node.log(err);
 			})
 		});
 		
