@@ -49,7 +49,7 @@ module.exports = function (RED) {
 				node.warn(err);
 			})
 		});
-		
+	 	
 	}
 	RED.nodes.registerType("baidu-tts", baiduTTSNode);
 	
