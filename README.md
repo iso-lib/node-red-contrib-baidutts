@@ -26,7 +26,7 @@
 
 
 ## 安装
-npm i node-red-contrib-baidu-tts
+npm install node-red-contrib-baidutts
 
 ## 使用
 
