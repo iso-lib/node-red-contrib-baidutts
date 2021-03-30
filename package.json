@@ -3,7 +3,7 @@
   "description": "百度语音合成TTS",
   "license": "MIT",
   "main": "baidu_tts.js",
-  "author": "baidu-aip",
+  "author": "iso-lib",
   "node-red": {
     "nodes": {
       "baidu-tts": "baidu_tts.js"
