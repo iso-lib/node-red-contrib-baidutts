@@ -26,9 +26,9 @@ npm install node-red-contrib-baidutts
 
 ## 使用
 
-![配置](https://cdn.jsdelivr.net/gh/iso-lib/image@main/屏幕截图 2021-03-29 221845.6q963xoayhg0.png)
+![配置](https://cdn.jsdelivr.net/gh/iso-lib/image@main/dede.4ncmuahuxv20.png)
 
-![服务器配置](https://cdn.jsdelivr.net/gh/iso-lib/image@main/屏幕截图 2021-03-29 221945.4qpqtshm1980.png)
+![服务器配置](https://cdn.jsdelivr.net/gh/iso-lib/image@main/dede.19eojodbsfm.png)
 
 ![上个节点传入](https://cdn.jsdelivr.net/gh/iso-lib/image@main/dede.6z7n0jz340k0.png)
 
