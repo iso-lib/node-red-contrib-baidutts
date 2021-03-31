@@ -3,7 +3,7 @@
   "description": "百度语音合成TTS",
   "license": "MIT",
   "main": "baidu_tts.js",
-  "author": "iso-lib",
+  "author": "baidu-aip",
   "node-red": {
     "nodes": {
       "baidu-tts": "baidu_tts.js"
@@ -16,7 +16,7 @@
   "dependencies": {
     "baidu-aip-sdk": "^2.0.0"
   },
-  "version": "1.0.2",
+  "version": "1.0.5",
   "bugs": {
     "url": "https://github.com/iso-lib/node-red-contrib-baidutts/issues"
   },

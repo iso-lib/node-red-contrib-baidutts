@@ -2,14 +2,10 @@
 # 欢迎使用node-red-contrib-baidutts
 
 
-
-
-## 本程序是node-red的节点模块,基于百度开放API进行开发调试
-
 ## 节点功能为将输入的文字转为语音,并存储为mp3文件
 #### 可直接在本节点TTS文本框内输入文字,如果留空则会使用上个节点传来的msg.data的内容
 
-要使用本节点,请登录[百度AI开放平台](https://ai.baidu.com/tech/speech)，创建语音应用获取参数
+要使用本节点,请登录[百度AI开放平台](https://ai.baidu.com/tech/speech)，免费创建语音应用获取参数
 #### 需要3个参数
 1. App ID
 2. Api Key
@@ -30,11 +26,11 @@ npm install node-red-contrib-baidutts
 
 ## 使用
 
-![配置](https://ae01.alicdn.com/kf/Ud1dce69cda1f4de0a9436eae5f61a525u.jpg)
+![配置](https://cdn.jsdelivr.net/gh/iso-lib/image@main/屏幕截图 2021-03-29 221845.6q963xoayhg0.png)
 
-![服务器配置](https://ae01.alicdn.com/kf/U4811bedf8ec14f5eaffcde34765454e9R.jpg)
+![服务器配置](https://cdn.jsdelivr.net/gh/iso-lib/image@main/屏幕截图 2021-03-29 221945.4qpqtshm1980.png)
 
-![上个节点传入](https://ae01.alicdn.com/kf/U134be02b57b54e2d8602ee175b94abbdQ.jpg)
+![上个节点传入](https://cdn.jsdelivr.net/gh/iso-lib/image@main/dede.6z7n0jz340k0.png)
 
 
 结束
