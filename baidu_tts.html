@@ -1,0 +1,125 @@
+<script type="text/javascript">
+    RED.nodes.registerType('baidu-tts',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            server: {value:"", type:"baidu-tts-server"},
+            data: {value:""}, 
+			spd: {value:"5"}, 
+			pit: {value:"5"}, 
+			vol: {value:"8"}, 
+			per: {value:"0"},
+			path: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: " function.png",
+        label: function() {
+            return this.name|| "百度TTS";
+        },
+    });
+
+    RED.nodes.registerType('baidu-tts-server',{
+        category: 'config',
+        defaults: {
+            name : { value:"默认百度TTS配置",required:true},
+			appID : { value:"", required:true},
+            apiKey : { value:"", required:true},
+            secretKey : { value:"", required:true}
+        },
+        label: function() {
+            return this.name;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="baidu-tts">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-tag"></i> Server</label>
+        <input type="text" id="node-input-server" placeholder="Server">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-data"><i class="icon-tag"></i>TTS文本</label>
+        <input type="text" id="node-input-data" maxlength='78' placeholder="(msg.data)">
+    </div>
+
+
+
+    <div class="form-row">
+      <label style="width: 100%; text-align: center; color: #ccc;">下方为可选设置,无特殊需求默认即可</label>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-per"><i class="icon-tag"></i>声音角色<br />0:女  1:男</label>
+        <input type="text" id="node-input-per" maxlength='78' >
+    </div>
+	
+    <div class="form-row">
+        <label for="node-input-spd"><i class="icon-tag"></i>语速<br />取值范围0-9</label>
+        <input type="text" id="node-input-spd" maxlength='78' >
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-pit"><i class="icon-tag"></i>语调<br />取值范围0-9</label>
+        <input type="text" id="node-input-pit" maxlength='78' >
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-vol"><i class="icon-tag"></i>音量<br />取值范围0-15</label>
+        <input type="text" id="node-input-vol" maxlength='78' >
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-path"><i class="icon-tag"></i>mp3文件名</label>
+        <input type="text" id="node-input-path" maxlength='78' placeholder="可带路径,留空为当前路径下tts.mp3">
+    </div>
+
+    <div class="form-row">
+        <label style="width: 100%;text-align: center;box-sizing: border-box;" >
+          <a href="https://github.com/iso-lib/node-red-contrib-baidutts" target="_blank">使用中如有疑惑请点击此处需求帮助。</a>
+        </label>
+    </div>
+
+</script>
+
+
+<script type="text/x-red" data-help-name="baidu-tts">
+    <p>百度TTS配置</p>
+    <p>可在TTS文本框中直接输入文字,例如 你好主人,欢迎回家 </p>
+    <p>如果留空,则会合成上个节点传入的 msg.data 内容</p>
+
+</script>
+
+
+<script type="text/x-red" data-template-name="baidu-tts-server">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-bookmark"></i> 默认名称</label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-appID"><i class="icon-bookmark"></i>AppID </label>
+        <input type="text" id="node-config-input-appID" placeholder="百度语音合成应用AppID">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apiKey"><i class="icon-bookmark"></i>API Key </label>
+        <input type="text" id="node-config-input-apiKey" placeholder="百度语音合成应用API Key">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-secretKey"><i class="icon-bookmark"></i>Secret Key</label>
+        <input type="text" id="node-config-input-secretKey" placeholder="百度语音合成应用Secret Key">
+    </div>
+
+    <div class="form-row">
+        <label style="width: 100%;text-align: center;box-sizing: border-box;" >
+          <a href="https://ai.baidu.com/tech/speech" target="_blank">AppID,API Key,Secret Key可点击此处,访问百度AI开放平台获取。</a>
+        </label>
+    </div>
+	
+</script>
+
+<script type="text/x-red" data-help-name="baidu-tts-server">
+    <p>百度TTS需要配置AppID,API Key和Secret Key</p>
+	<p>登录百度AI开放平台,免费新建语音合成应用后获取</p>
+    <p>分享节点的时候一定注意修改别暴露了</p>
+</script>
