@@ -22,10 +22,11 @@
     RED.nodes.registerType('baidu-tts-server',{
         category: 'config',
         defaults: {
-            name : { value:"默认百度TTS配置",required:true},
-			appID : { value:"", required:true},
-            apiKey : { value:"", required:true},
-            secretKey : { value:"", required:true}
+            name : { value:"默认百度TTS",required:true},
+			platform: { value: 'baidu-ai' },
+			appID : { value:""},
+            apiKey : { value:""},
+            secretKey : { value:""}
         },
         label: function() {
             return this.name;
@@ -35,7 +36,7 @@
 
 <script type="text/x-red" data-template-name="baidu-tts">
     <div class="form-row">
-        <label for="node-input-server"><i class="icon-tag"></i> Server</label>
+        <label for="node-input-server"><i class="icon-tag"></i>语音平台</label>
         <input type="text" id="node-input-server" placeholder="Server">
     </div>
 
@@ -44,15 +45,30 @@
         <input type="text" id="node-input-data" maxlength='78' placeholder="(msg.data)">
     </div>
 
-
-
     <div class="form-row">
-      <label style="width: 100%; text-align: center; color: #ccc;">下方为可选设置,无特殊需求默认即可</label>
+        <label for="node-input-path"><i class="icon-tag"></i>mp3文件名</label>
+        <input type="text" id="node-input-path" maxlength='78' placeholder="可带路径,留空为当前路径下tts.mp3">
     </div>
 
     <div class="form-row">
-        <label for="node-input-per"><i class="icon-tag"></i>声音角色<br />0:女  1:男</label>
-        <input type="text" id="node-input-per" maxlength='78' >
+      <label style="width: 100%; text-align: center; color: #f4a460;">若使用百度翻译引擎,下方设置不生效</label>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-per"><i class="icon-tag"></i>声音角色</label>
+		<select type="text" id="node-input-per" style="width:70%">
+				<option value="0" >度小美(基础音库)</option>
+				<option value="1" >度小宇(基础音库)</option>
+				<option value="3" >度逍遥(基础音库)</option>
+				<option value="4" >度丫丫(基础音库)</option>
+				<option value="5003" style="color: #ff0000">度逍遥(精品音库)</option>
+				<option value="5118" style="color: #ff0000">度小鹿(精品音库)</option>
+				<option value="106" style="color: #ff0000">度博文(精品音库)</option>
+				<option value="110" style="color: #ff0000">度小童(精品音库)</option>
+				<option value="111" style="color: #ff0000">度小萌(精品音库)</option>
+				<option value="103" style="color: #ff0000">度米朵(精品音库)</option>
+				<option value="5" style="color: #ff0000">度小娇(精品音库)</option>
+		</select>
     </div>
 	
     <div class="form-row">
@@ -70,10 +86,7 @@
         <input type="text" id="node-input-vol" maxlength='78' >
     </div>
 
-    <div class="form-row">
-        <label for="node-input-path"><i class="icon-tag"></i>mp3文件名</label>
-        <input type="text" id="node-input-path" maxlength='78' placeholder="可带路径,留空为当前路径下tts.mp3">
-    </div>
+
 
     <div class="form-row">
         <label style="width: 100%;text-align: center;box-sizing: border-box;" >
@@ -97,20 +110,27 @@
         <label for="node-config-input-name"><i class="icon-bookmark"></i> 默认名称</label>
         <input type="text" id="node-config-input-name">
     </div>
-    <div class="form-row">
+	<div class="form-row">
+		<label for="node-config-input-platform"><i class="icon-bookmark"></i>语音合成接口</label>
+		<select type="text" id="node-config-input-platform" style="width:70%" onChange="Check()">
+				  <option value="baidu-ai" >百度智能API</option>
+				  <option value="baidu-fanyi" >百度翻译API</option>
+		</select>
+	</div>
+    <div class="form-row" id="appID">
         <label for="node-config-input-appID"><i class="icon-bookmark"></i>AppID </label>
-        <input type="text" id="node-config-input-appID" placeholder="百度语音合成应用AppID">
+        <input type="text" id="node-config-input-appID" placeholder="百度智能语音AppID">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="apiKey">
         <label for="node-config-input-apiKey"><i class="icon-bookmark"></i>API Key </label>
-        <input type="text" id="node-config-input-apiKey" placeholder="百度语音合成应用API Key">
+        <input type="text" id="node-config-input-apiKey" placeholder="百度智能语音API Key">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="secretKey">
         <label for="node-config-input-secretKey"><i class="icon-bookmark"></i>Secret Key</label>
-        <input type="text" id="node-config-input-secretKey" placeholder="百度语音合成应用Secret Key">
+        <input type="text" id="node-config-input-secretKey" placeholder="百度智能语音Secret Key">
     </div>
 
-    <div class="form-row">
+    <div class="form-row" id="baidu_href">
         <label style="width: 100%;text-align: center;box-sizing: border-box;" >
           <a href="https://ai.baidu.com/tech/speech" target="_blank">AppID,API Key,Secret Key可点击此处,访问百度AI开放平台获取。</a>
         </label>
@@ -119,7 +139,25 @@
 </script>
 
 <script type="text/x-red" data-help-name="baidu-tts-server">
-    <p>百度TTS需要配置AppID,API Key和Secret Key</p>
-	<p>登录百度AI开放平台,免费新建语音合成应用后获取</p>
-    <p>分享节点的时候一定注意修改别暴露了</p>
+	<p>百度翻译API无需注册即可使用</p>
+	<p>百度智能API需要配置AppID,API Key和Secret Key</p>
+	<p>自行登录百度AI开放平台,免费新建语音合成应用后获取</p>
+    <p>百度新账号可免费领取使用额度</p>
+</script>
+
+<script type="text/javascript">
+	function Check() {
+		var sel = document.getElementById("node-config-input-platform");
+		if (sel.value == "baidu-fanyi") {
+			document.getElementById("appID").style.display="none";
+			document.getElementById("apiKey").style.display="none";
+			document.getElementById("secretKey").style.display="none";
+			document.getElementById("baidu_href").style.display="none";
+		} else {
+			document.getElementById("appID").style.display="";
+			document.getElementById("apiKey").style.display="";
+			document.getElementById("secretKey").style.display="";
+			document.getElementById("baidu_href").style.display="";
+		}
+	}
 </script>
