@@ -16,7 +16,7 @@
   "dependencies": {
     "baidu-aip-sdk": "^2.0.0"
   },
-  "version": "1.0.8",
+  "version": "1.0.9",
   "bugs": {
     "url": "https://github.com/iso-lib/node-red-contrib-baidutts/issues"
   },
