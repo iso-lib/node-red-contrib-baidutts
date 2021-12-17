@@ -51,6 +51,7 @@ module.exports = function (RED) {
 					break;
 				case "baidu-fanyi":
 					var ttsUrl = "https://fanyi.baidu.com/gettts";
+					var writeStream=fs.createWriteStream(ttsPath , {autoClose : true})
 					request({
 						url : ttsUrl, 
 						method: 'POST',
@@ -64,18 +65,22 @@ module.exports = function (RED) {
 							source : "web"
 						}}, function (error ,response, body) {
 							if (!error && response.statusCode == 200) {
-								var buf = new Buffer(body);
-								var buffer = {data : buf};
 								node.status({ text: `百度翻译语音，保存为 ${ttsPath}` });
-								node.send({platform: 'baidu-fanyi' , result: buffer});
 							} else {
 								node.status({ text: "语音合成失败,请检查配置" });
 								node.send({platform: 'baidu-fanyi' , result: error});
 							}
-						}).pipe(fs.createWriteStream(ttsPath));
+						}).pipe(writeStream);
+						writeStream.on('finish',function(){
+							fs.readFile(ttsPath , function(err,body) {
+								if (err) throw err;
+								var buffer = {data:body};
+								node.send({platform: 'baidu-fanyi' , result: buffer});
+							});
+						});
 					break;
 				default:
-					node.status({ text: "其他接口,备用" });
+					node.send({ platform: "请在TTS服务配置里选择语音合成平台" });
 			}
 		});
 		
