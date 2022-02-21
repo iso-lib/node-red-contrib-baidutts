@@ -35,7 +35,7 @@ module.exports = function (RED) {
 			switch(baidu_platform)
 			{
 				case "baidu-ai":
-					var options = {spd: config.spd, pit: config.pit, vol: config.vol, per: config.per};
+					var options = {spd: config.spd, pit: config.pit, vol: config.vol, per: config.per, aue: config.aue};
 					client.text2audio(ttsData, options).then(function(result) {
 						if (result.data) {
 							fs.writeFileSync(ttsPath, result.data);

@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('baidu-tts',{
-        category: 'function',
+        category: 'TTS',
         color: '#a6bbcf',
         defaults: {
             server: {value:"", type:"baidu-tts-server"},
@@ -9,11 +9,12 @@
 			pit: {value:"5"}, 
 			vol: {value:"8"}, 
 			per: {value:"0"},
-			path: {value:""}
+			path: {value:""},
+			aue: {value:"3"}
         },
         inputs:1,
         outputs:1,
-        icon: " function.png",
+        icon: "font-awesome/fa-file-audio-o",
         label: function() {
             return this.name|| "百度TTS";
         },
@@ -54,6 +55,16 @@
       <label style="width: 100%; text-align: center; color: #f4a460;">若使用百度翻译引擎,下方设置不生效</label>
     </div>
 
+    <div class="form-row">
+        <label for="node-input-aue"><i class="icon-tag"></i>音频编码格式</label>
+		<select type="text" id="node-input-aue" style="width:70%">
+				<option value="3" >mp3</option>
+				<option value="4" >pcm-16k</option>
+				<option value="5" >pcm-8k</option>
+				<option value="6" >wav</option>
+		</select>
+    </div>
+	
     <div class="form-row">
         <label for="node-input-per"><i class="icon-tag"></i>声音角色</label>
 		<select type="text" id="node-input-per" style="width:70%">
