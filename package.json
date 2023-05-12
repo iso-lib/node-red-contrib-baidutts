@@ -1,50 +1,9 @@
 {
-  "_from": "node-red-contrib-baidutts@1.0.10",
-  "_id": "node-red-contrib-baidutts@1.0.10",
-  "_inBundle": false,
-  "_integrity": "sha512-RXhowbuYnTPaQOSTaHxYI2C8AnVIlovd5ITzbth4jSZb35+BdK+h+o+CoUSQi1ewTTW2qwAUY5PR+x/MOu31/g==",
-  "_location": "/node-red-contrib-baidutts",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "node-red-contrib-baidutts@1.0.10",
-    "name": "node-red-contrib-baidutts",
-    "escapedName": "node-red-contrib-baidutts",
-    "rawSpec": "1.0.10",
-    "saveSpec": null,
-    "fetchSpec": "1.0.10"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/node-red-contrib-baidutts/-/node-red-contrib-baidutts-1.0.10.tgz",
-  "_shasum": "739863dfd51f71673f7da7da431a03ff1fbcb101",
-  "_spec": "node-red-contrib-baidutts@1.0.10",
-  "_where": "/data",
-  "author": {
-    "name": "baidu-aip"
-  },
-  "bugs": {
-    "url": "https://github.com/iso-lib/node-red-contrib-baidutts/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "baidu-aip-sdk": "^2.0.0"
-  },
-  "deprecated": false,
+  "name": "node-red-contrib-baidutts",
   "description": "百度语音合成TTS",
-  "devDependencies": {},
-  "homepage": "https://github.com/iso-lib/node-red-contrib-baidutts#readme",
-  "keywords": [
-    "baidu",
-    "node-red",
-    "tts"
-  ],
   "license": "MIT",
   "main": "baidu_tts.js",
-  "name": "node-red-contrib-baidutts",
+  "author": "iso-lib",
   "node-red": {
     "nodes": {
       "baidu-tts": "baidu_tts.js"
@@ -54,8 +13,21 @@
     "type": "git",
     "url": "git+https://github.com/iso-lib/node-red-contrib-baidutts.git"
   },
+  "dependencies": {
+    "baidu-aip-sdk": "^2.0.0"
+  },
+  "version": "1.0.8",
+  "bugs": {
+    "url": "https://github.com/iso-lib/node-red-contrib-baidutts/issues"
+  },
+  "homepage": "https://github.com/iso-lib/node-red-contrib-baidutts#readme",
+  "devDependencies": {},
   "scripts": {
     "test": "mocha"
   },
-  "version": "1.0.12"
+  "keywords": [
+    "baidu",
+    "node-red",
+    "tts"
+  ]
 }
