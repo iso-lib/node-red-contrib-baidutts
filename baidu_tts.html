@@ -7,7 +7,7 @@
             data: {value:""}, 
 			spd: {value:"5"}, 
 			pit: {value:"5"}, 
-			vol: {value:"8"}, 
+			vol: {value:"9"}, 
 			per: {value:"0"},
 			path: {value:""},
 			aue: {value:"3"}
@@ -23,14 +23,56 @@
     RED.nodes.registerType('baidu-tts-server',{
         category: 'config',
         defaults: {
-            name : { value:"默认百度TTS",required:true},
+            name : { value:"百度TTS",required:true},
 			platform: { value: 'baidu-ai' },
 			appID : { value:""},
             apiKey : { value:""},
             secretKey : { value:""}
         },
         label: function() {
-            return this.name;
+            // 根据平台自动添加后缀
+            var baseName = this.name || "百度TTS";
+            var suffix = "";
+            
+            if (this.platform === 'baidu-ai') {
+                suffix = "-智能API";
+            } else if (this.platform === 'baidu-fanyi') {
+                suffix = "-翻译API";
+            }
+            
+            // 避免重复添加后缀
+            if (!baseName.endsWith("-智能API") && !baseName.endsWith("-翻译API")) {
+                return baseName + suffix;
+            } else {
+                // 如果已经有后缀，替换为新的后缀
+                baseName = baseName.replace(/-智能API$/, "").replace(/-翻译API$/, "");
+                return baseName + suffix;
+            }
+        },
+        oneditprepare: function() {
+            // 初始化时调用 Check 函数
+            Check();
+            
+            // 当平台选择改变时，自动更新名称
+            $("#node-config-input-platform").on('change', function() {
+                Check();
+                updateNameSuffix();
+            });
+            
+            function updateNameSuffix() {
+                var platform = $("#node-config-input-platform").val();
+                var currentName = $("#node-config-input-name").val();
+                var baseName = currentName.replace(/-智能API$/, "").replace(/-翻译API$/, "");
+                var newSuffix = "";
+                
+                if (platform === 'baidu-ai') {
+                    newSuffix = "-智能API";
+                } else if (platform === 'baidu-fanyi') {
+                    newSuffix = "-翻译API";
+                }
+                
+                $("#node-config-input-name").val(baseName + newSuffix);
+            }
         }
     });
 </script>
@@ -67,41 +109,95 @@
 	
     <div class="form-row">
         <label for="node-input-per"><i class="icon-tag"></i>声音角色</label>
-		<select type="text" id="node-input-per" style="width:70%">
-				<option value="0" >度小美(基础音库)</option>
-				<option value="1" >度小宇(基础音库)</option>
-				<option value="3" >度逍遥(基础音库)</option>
-				<option value="4" >度丫丫(基础音库)</option>
-				<option value="5003" style="color: #ff0000">度逍遥(精品音库)</option>
-				<option value="5118" style="color: #ff0000">度小鹿(精品音库)</option>
-				<option value="106" style="color: #ff0000">度博文(精品音库)</option>
-				<option value="110" style="color: #ff0000">度小童(精品音库)</option>
-				<option value="111" style="color: #ff0000">度小萌(精品音库)</option>
-				<option value="103" style="color: #ff0000">度米朵(精品音库)</option>
-				<option value="5" style="color: #ff0000">度小娇(精品音库)</option>
-		</select>
+			<select type="text" id="node-input-per" style="width:70%">
+				<!-- 基础音库 -->
+				<option value="0">度小美-标准女主播</option>
+				<option value="1">度小宇-亲切男声</option>
+				<option value="3">度逍遥-情感男声</option>
+				<option value="4">度丫丫-童声</option>
+				
+				<!-- 精品音库 -->
+				<option value="5003" style="color: #0000ff">度逍遥-情感男声</option>
+				<option value="5118" style="color: #0000ff">度小鹿-甜美女声</option>
+				<option value="106" style="color: #0000ff">度博文-专业男主播</option>
+				<option value="103" style="color: #0000ff">度米朵-可爱童声</option>
+				<option value="110" style="color: #0000ff">度小童-童声主播</option>
+				<option value="111" style="color: #0000ff">度小萌-软萌妹子</option>
+				<option value="5" style="color: #0000ff">度小娇-成熟女主播</option>
+				
+				<!-- 臻品音库 -->
+				<option value="4003" style="color: #ff00ff">度逍遥-情感男声</option>
+				<option value="4106" style="color: #ff00ff">度博文-专业男主播</option>
+				<option value="4115" style="color: #ff00ff">度小贤-电台男主播</option>
+				<option value="5147" style="color: #ff00ff">度常盈-电台女主播</option>
+				<option value="5976" style="color: #ff00ff">度小皮-萌娃童声</option>
+				<option value="5971" style="color: #ff00ff">度皮特-老外男声</option>
+				<option value="4164" style="color: #ff00ff">度阿肯-主播男声</option>
+				<option value="4176" style="color: #ff00ff">度有为-磁性男声</option>
+				<option value="4259" style="color: #ff00ff">度小新-播音女声</option>
+				<option value="4119" style="color: #ff00ff">度小鹿-甜美女声</option>
+				<option value="4105" style="color: #ff00ff">度灵儿-清澈女声</option>
+				<option value="4117" style="color: #ff00ff">度小乐-活泼女声</option>
+				<option value="4288" style="color: #ff00ff">度晴岚-甜美女声</option>
+				<option value="4192" style="color: #ff00ff">度青巧-温柔男声</option>
+				<option value="4100" style="color: #ff00ff">度小雯-活力女主播</option>
+				<option value="4103" style="color: #ff00ff">度米朵-可爱女声</option>
+				<option value="4144" style="color: #ff00ff">度姐姐-娱乐女声</option>
+				<option value="4278" style="color: #ff00ff">度小贝-知识女主播</option>
+				<option value="4143" style="color: #ff00ff">度清风-配音男声</option>
+				<option value="4140" style="color: #ff00ff">度小新-专业女主播</option>
+				<option value="4129" style="color: #ff00ff">度小彦-知识男主播</option>
+				<option value="4149" style="color: #ff00ff">度星河-广告男声</option>
+				<option value="4254" style="color: #ff00ff">度小清-广告女声</option>
+				<option value="4206" style="color: #ff00ff">度博文-综艺男声</option>
+				<option value="4147" style="color: #ff00ff">度云朵-可爱童声</option>
+				<option value="4141" style="color: #ff00ff">度婉婉-甜美女声</option>
+				<option value="4226" style="color: #ff00ff">南方-电台女主播</option>
+				<option value="6205" style="color: #ff00ff">度悠然-旁白男声</option>
+				<option value="6221" style="color: #ff00ff">度云莺-旁白女声</option>
+				<option value="6546" style="color: #ff00ff">度清豪-逍遥侠客</option>
+				<option value="6602" style="color: #ff00ff">度清柯-温柔男神</option>
+				<option value="6562" style="color: #ff00ff">度雨桑 -元气少女</option>
+				<option value="6543" style="color: #ff00ff">度雨茜-邻家女孩</option>
+				<option value="6747" style="color: #ff00ff">度书夏-情感男声</option>
+				<option value="6748" style="color: #ff00ff">度书严-沉稳男声</option>
+				<option value="6746" style="color: #ff00ff">度书陆-沉稳男声</option>
+				<option value="6644" style="color: #ff00ff">度书宝-亲和女声</option>
+				<option value="4148" style="color: #ff00ff">度小夏-甜美女声</option>
+				<option value="4277" style="color: #ff00ff">西贝-脱口秀女声</option>
+				<option value="4114" style="color: #ff00ff">阿龙-说书男声</option>
+				<option value="5153" style="color: #ff00ff">度常悦-民生女主播</option>
+				<option value="6561" style="color: #ff00ff">度小乐-可爱童声</option>
+			</select>
     </div>
 	
     <div class="form-row">
-        <label for="node-input-spd"><i class="icon-tag"></i>语速<br />取值范围0-9</label>
+        <label for="node-input-spd"><i class="icon-tag"></i>语速<br />取值范围0-15</label>
         <input type="text" id="node-input-spd" maxlength='78' >
     </div>
 
     <div class="form-row">
-        <label for="node-input-pit"><i class="icon-tag"></i>语调<br />取值范围0-9</label>
+        <label for="node-input-pit"><i class="icon-tag"></i>语调<br />取值范围0-15</label>
         <input type="text" id="node-input-pit" maxlength='78' >
     </div>
 
     <div class="form-row">
-        <label for="node-input-vol"><i class="icon-tag"></i>音量<br />取值范围0-15</label>
+        <label for="node-input-vol"><i class="icon-tag"></i>音量<br />取值范围0-9</label>
         <input type="text" id="node-input-vol" maxlength='78' >
     </div>
 
 
 
-    <div class="form-row">
+    <div class="form-row" style="color: #008080;">
+    	<p>-------------------★★★★★★-----------------</p>
+        <p>百度翻译API无需注册，可直接使用，但无法调节声音角色</p>
+        <p>百度智能API需注册实名后领取免费额度,有更多可选角色</p>
+        <p>领取的免费额度无到期时间，每次生成60个汉字以内算一次</p>
+        <p>基础音库（黑字）：3并发，免费50000次</p>
+        <p>精品音库（蓝字）：3并发，免费50000次</p>
+        <p>臻品音库（品红）：3并发，免费10000次</p>
         <label style="width: 100%;text-align: center;box-sizing: border-box;" >
-          <a href="https://github.com/iso-lib/node-red-contrib-baidutts" target="_blank">使用中如有疑惑请点击此处需求帮助。</a>
+          <a style="color: #0000ff" href="https://github.com/iso-lib/node-red-contrib-baidutts" target="_blank">使用中如有疑惑请点击此处需求帮助。</a>
         </label>
     </div>
 
@@ -125,7 +221,7 @@
     </div>
 	<div class="form-row">
 		<label for="node-config-input-platform"><i class="icon-bookmark"></i>语音合成接口</label>
-		<select type="text" id="node-config-input-platform" style="width:70%" onChange="Check()">
+		<select type="text" id="node-config-input-platform" style="width:70%">
 				  <option value="baidu-ai" selected="selected">百度智能API</option>
 				  <option value="baidu-fanyi" >百度翻译API</option>
 		</select>
