@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-baidutts",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "百度语音合成TTS",
   "main": "baidu_tts.js",
   "node-red": {

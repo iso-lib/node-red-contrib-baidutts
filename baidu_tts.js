@@ -63,19 +63,13 @@ module.exports = function (RED) {
 		}
 		
 		node.on('input', async function (msg) {
-			var ttsData, ttsPath;
-			
-			if (config.data.replace(/(^[ \t\n\r]*)|([ \t\n\r]*$)/g, '').length == 0) {
-				ttsData = msg.data || '您没有配置语音内容,请检查配置!';
-			} else {
-				ttsData = config.data;
-			}
-			
-			if (config.path.replace(/(^[ \t\n\r]*)|([ \t\n\r]*$)/g, '').length == 0) {
-				ttsPath = msg.path || 'tts.mp3';
-			} else {
-				ttsPath = config.path;
-			}
+			const ttsData = (!config.data || config.data.trim().length === 0)
+			    ? (msg.data || msg.text || '您没有配置语音内容,请检查配置!')
+			    : config.data;
+
+			const ttsPath = (!config.path || config.path.trim().length === 0)
+			    ? (msg.path || msg.filename || 'tts.mp3')
+			    : config.path;
 			
 			switch(baidu_platform) {
 				case "baidu-ai":

@@ -18,6 +18,40 @@
         label: function() {
             return this.name|| "百度TTS";
         },
+        oneditprepare: function() {
+            // 动态加载声音角色选项
+            loadVoiceOptions();
+            
+            // 根据服务器配置决定是否显示高级选项
+            var node = this;
+            
+            // 监听服务器配置变化
+            $("#node-input-server").on('change', function() {
+                updateAdvancedOptions();
+            });
+            
+            // 初始化时也要检查
+            updateAdvancedOptions();
+            // 恢复之前保存的声音角色选择
+	        $("#node-input-per").val(this.per);
+	        // 恢复其他选择框的值
+	        $("#node-input-aue").val(this.aue);
+            function updateAdvancedOptions() {
+                var serverId = $("#node-input-server").val();
+                if (serverId) {
+                    // 获取服务器配置
+                    var serverNode = RED.nodes.node(serverId);
+                    if (serverNode && serverNode.platform === 'baidu-fanyi') {
+                        // 隐藏百度智能API相关的配置
+                        $("#baidu-ai-options").hide();
+                    } else {
+                        // 显示百度智能API相关的配置
+                        $("#baidu-ai-options").show();
+                        $("#baidu-ai-config-options").show();
+                    }
+                }
+            }
+        }
     });
 
     RED.nodes.registerType('baidu-tts-server',{
@@ -85,117 +119,57 @@
 
     <div class="form-row">
         <label for="node-input-data"><i class="icon-tag"></i>TTS文本</label>
-        <input type="text" id="node-input-data" maxlength='78' placeholder="(msg.data)">
+        <input type="text" id="node-input-data" maxlength='78' placeholder="可配置msg.data或msg.text">
     </div>
 
     <div class="form-row">
         <label for="node-input-path"><i class="icon-tag"></i>mp3文件名</label>
-        <input type="text" id="node-input-path" maxlength='78' placeholder="可配置msg.path,默认当前路径下tts.mp3">
+        <input type="text" id="node-input-path" maxlength='78' placeholder="可配置msg.path或msg.filename,默认为tts.mp3">
     </div>
 
-    <div class="form-row">
-      <label style="width: 100%; text-align: center; color: #f4a460;">若使用百度翻译引擎,下方设置不生效</label>
-    </div>
+    <!-- 百度智能API专用配置 (当选择 baidu-fanyi 时隐藏) -->
+    <div id="baidu-ai-options">
+        <div class="form-row">
+            <label for="node-input-aue"><i class="icon-tag"></i>音频编码格式</label>
+            <select type="text" id="node-input-aue" style="width:70%">
+                    <option value="3" >mp3</option>
+                    <option value="4" >pcm-16k</option>
+                    <option value="5" >pcm-8k</option>
+                    <option value="6" >wav</option>
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <label for="node-input-per"><i class="icon-tag"></i>声音角色</label>
+                <select type="text" id="node-input-per" style="width:70%">
+                    <!-- 选项将通过 JavaScript 动态加载 -->
+                </select>
+        </div>
+        
+        <div class="form-row">
+            <label for="node-input-spd"><i class="icon-tag"></i>语速设置：0-15</label>
+            <input type="text" id="node-input-spd" maxlength='78' >
+        </div>
 
-    <div class="form-row">
-        <label for="node-input-aue"><i class="icon-tag"></i>音频编码格式</label>
-		<select type="text" id="node-input-aue" style="width:70%">
-				<option value="3" >mp3</option>
-				<option value="4" >pcm-16k</option>
-				<option value="5" >pcm-8k</option>
-				<option value="6" >wav</option>
-		</select>
-    </div>
-	
-    <div class="form-row">
-        <label for="node-input-per"><i class="icon-tag"></i>声音角色</label>
-			<select type="text" id="node-input-per" style="width:70%">
-				<!-- 基础音库 -->
-				<option value="0">度小美-标准女主播</option>
-				<option value="1">度小宇-亲切男声</option>
-				<option value="3">度逍遥-情感男声</option>
-				<option value="4">度丫丫-童声</option>
-				
-				<!-- 精品音库 -->
-				<option value="5003" style="color: #0000ff">度逍遥-情感男声</option>
-				<option value="5118" style="color: #0000ff">度小鹿-甜美女声</option>
-				<option value="106" style="color: #0000ff">度博文-专业男主播</option>
-				<option value="103" style="color: #0000ff">度米朵-可爱童声</option>
-				<option value="110" style="color: #0000ff">度小童-童声主播</option>
-				<option value="111" style="color: #0000ff">度小萌-软萌妹子</option>
-				<option value="5" style="color: #0000ff">度小娇-成熟女主播</option>
-				
-				<!-- 臻品音库 -->
-				<option value="4003" style="color: #ff00ff">度逍遥-情感男声</option>
-				<option value="4106" style="color: #ff00ff">度博文-专业男主播</option>
-				<option value="4115" style="color: #ff00ff">度小贤-电台男主播</option>
-				<option value="5147" style="color: #ff00ff">度常盈-电台女主播</option>
-				<option value="5976" style="color: #ff00ff">度小皮-萌娃童声</option>
-				<option value="5971" style="color: #ff00ff">度皮特-老外男声</option>
-				<option value="4164" style="color: #ff00ff">度阿肯-主播男声</option>
-				<option value="4176" style="color: #ff00ff">度有为-磁性男声</option>
-				<option value="4259" style="color: #ff00ff">度小新-播音女声</option>
-				<option value="4119" style="color: #ff00ff">度小鹿-甜美女声</option>
-				<option value="4105" style="color: #ff00ff">度灵儿-清澈女声</option>
-				<option value="4117" style="color: #ff00ff">度小乐-活泼女声</option>
-				<option value="4288" style="color: #ff00ff">度晴岚-甜美女声</option>
-				<option value="4192" style="color: #ff00ff">度青巧-温柔男声</option>
-				<option value="4100" style="color: #ff00ff">度小雯-活力女主播</option>
-				<option value="4103" style="color: #ff00ff">度米朵-可爱女声</option>
-				<option value="4144" style="color: #ff00ff">度姐姐-娱乐女声</option>
-				<option value="4278" style="color: #ff00ff">度小贝-知识女主播</option>
-				<option value="4143" style="color: #ff00ff">度清风-配音男声</option>
-				<option value="4140" style="color: #ff00ff">度小新-专业女主播</option>
-				<option value="4129" style="color: #ff00ff">度小彦-知识男主播</option>
-				<option value="4149" style="color: #ff00ff">度星河-广告男声</option>
-				<option value="4254" style="color: #ff00ff">度小清-广告女声</option>
-				<option value="4206" style="color: #ff00ff">度博文-综艺男声</option>
-				<option value="4147" style="color: #ff00ff">度云朵-可爱童声</option>
-				<option value="4141" style="color: #ff00ff">度婉婉-甜美女声</option>
-				<option value="4226" style="color: #ff00ff">南方-电台女主播</option>
-				<option value="6205" style="color: #ff00ff">度悠然-旁白男声</option>
-				<option value="6221" style="color: #ff00ff">度云莺-旁白女声</option>
-				<option value="6546" style="color: #ff00ff">度清豪-逍遥侠客</option>
-				<option value="6602" style="color: #ff00ff">度清柯-温柔男神</option>
-				<option value="6562" style="color: #ff00ff">度雨桑 -元气少女</option>
-				<option value="6543" style="color: #ff00ff">度雨茜-邻家女孩</option>
-				<option value="6747" style="color: #ff00ff">度书夏-情感男声</option>
-				<option value="6748" style="color: #ff00ff">度书严-沉稳男声</option>
-				<option value="6746" style="color: #ff00ff">度书陆-沉稳男声</option>
-				<option value="6644" style="color: #ff00ff">度书宝-亲和女声</option>
-				<option value="4148" style="color: #ff00ff">度小夏-甜美女声</option>
-				<option value="4277" style="color: #ff00ff">西贝-脱口秀女声</option>
-				<option value="4114" style="color: #ff00ff">阿龙-说书男声</option>
-				<option value="5153" style="color: #ff00ff">度常悦-民生女主播</option>
-				<option value="6561" style="color: #ff00ff">度小乐-可爱童声</option>
-			</select>
-    </div>
-	
-    <div class="form-row">
-        <label for="node-input-spd"><i class="icon-tag"></i>语速<br />取值范围0-15</label>
-        <input type="text" id="node-input-spd" maxlength='78' >
-    </div>
+        <div class="form-row">
+            <label for="node-input-pit"><i class="icon-tag"></i>语调设置：0-15</label>
+            <input type="text" id="node-input-pit" maxlength='78' >
+        </div>
 
-    <div class="form-row">
-        <label for="node-input-pit"><i class="icon-tag"></i>语调<br />取值范围0-15</label>
-        <input type="text" id="node-input-pit" maxlength='78' >
+        <div class="form-row">
+            <label for="node-input-vol"><i class="icon-tag"></i>音量设置：0-9</label>
+            <input type="text" id="node-input-vol" maxlength='78' >
+        </div>
     </div>
-
-    <div class="form-row">
-        <label for="node-input-vol"><i class="icon-tag"></i>音量<br />取值范围0-9</label>
-        <input type="text" id="node-input-vol" maxlength='78' >
-    </div>
-
-
 
     <div class="form-row" style="color: #008080;">
-    	<p>-------------------★★★★★★-----------------</p>
-        <p>百度翻译API无需注册，可直接使用，但无法调节声音角色</p>
-        <p>百度智能API需注册实名后领取免费额度,有更多可选角色</p>
-        <p>领取的免费额度无到期时间，每次生成60个汉字以内算一次</p>
-        <p>基础音库（黑字）：3并发，免费50000次</p>
+    	<p>--------------------------------提示信息-------------------------------</p>
+        <p>翻译API无需注册，可直接使用，但无法调节声音角色等项目</p>
+        <p>智能API需注册实名后领取免费额度,有更多参数可选</p>
+        <p>领取的免费额度无到期时间，一次调用合成60个汉字以内算一次</p>
+        <p>基础音库（黑字）：5并发，免费50000次</p>
         <p>精品音库（蓝字）：3并发，免费50000次</p>
-        <p>臻品音库（品红）：3并发，免费10000次</p>
+        <p>臻品音库（紫红）：3并发，免费10000次</p>
         <label style="width: 100%;text-align: center;box-sizing: border-box;" >
           <a style="color: #0000ff" href="https://github.com/iso-lib/node-red-contrib-baidutts" target="_blank">使用中如有疑惑请点击此处需求帮助。</a>
         </label>
@@ -226,47 +200,138 @@
 				  <option value="baidu-fanyi" >百度翻译API</option>
 		</select>
 	</div>
-    <div class="form-row" id="appID">
-        <label for="node-config-input-appID"><i class="icon-bookmark"></i>AppID </label>
-        <input type="text" id="node-config-input-appID" placeholder="百度智能语音AppID">
-    </div>
-    <div class="form-row" id="apiKey">
-        <label for="node-config-input-apiKey"><i class="icon-bookmark"></i>API Key </label>
-        <input type="text" id="node-config-input-apiKey" placeholder="百度智能语音API Key">
-    </div>
-    <div class="form-row" id="secretKey">
-        <label for="node-config-input-secretKey"><i class="icon-bookmark"></i>Secret Key</label>
-        <input type="text" id="node-config-input-secretKey" placeholder="百度智能语音Secret Key">
-    </div>
+	<div id="baidu-ai-config-options">
+	    <div class="form-row" id="appID">
+	        <label for="node-config-input-appID"><i class="icon-bookmark"></i>AppID </label>
+	        <input type="text" id="node-config-input-appID" placeholder="百度智能语音AppID">
+	    </div>
+	    <div class="form-row" id="apiKey">
+	        <label for="node-config-input-apiKey"><i class="icon-bookmark"></i>API Key </label>
+	        <input type="text" id="node-config-input-apiKey" placeholder="百度智能语音API Key">
+	    </div>
+	    <div class="form-row" id="secretKey">
+	        <label for="node-config-input-secretKey"><i class="icon-bookmark"></i>Secret Key</label>
+	        <input type="text" id="node-config-input-secretKey" placeholder="百度智能语音Secret Key">
+	    </div>
 
-    <div class="form-row" id="baidu_href">
-        <label style="width: 100%;text-align: center;box-sizing: border-box;" >
-          <a href="https://ai.baidu.com/tech/speech" target="_blank">AppID,API Key,Secret Key可点击此处,访问百度AI开放平台获取。</a>
-        </label>
-    </div>
-	
+	    <div class="form-row" id="baidu_href">
+	        <label style="width: 100%;text-align: center;box-sizing: border-box;" >
+	          <a href="https://ai.baidu.com/tech/speech" target="_blank">AppID,API Key,Secret Key可点击此处,访问百度AI开放平台获取。</a>
+	        </label>
+	    </div>
+	</div>
 </script>
 
 <script type="text/x-red" data-help-name="baidu-tts-server">
 	<p>百度翻译API无需注册即可使用</p>
 	<p>百度智能API需要配置AppID,API Key和Secret Key</p>
 	<p>自行登录百度AI开放平台,免费新建语音合成应用后获取</p>
-    <p>百度新账号可免费领取使用额度</p>
+    <p>新账号可免费领取使用额度一次</p>
 </script>
 
 <script type="text/javascript">
 	function Check() {
 		var sel = document.getElementById("node-config-input-platform");
 		if (sel.value == "baidu-fanyi") {
-			document.getElementById("appID").style.display="none";
-			document.getElementById("apiKey").style.display="none";
-			document.getElementById("secretKey").style.display="none";
-			document.getElementById("baidu_href").style.display="none";
+			$("#baidu-ai-config-options").hide();
 		} else {
-			document.getElementById("appID").style.display="";
-			document.getElementById("apiKey").style.display="";
-			document.getElementById("secretKey").style.display="";
-			document.getElementById("baidu_href").style.display="";
+			$("#baidu-ai-config-options").show();
+		}
+	}
+	
+	// 声音角色配置数据
+	var VOICE_OPTIONS = {
+		"基础音库": [
+			{ "value": "0", "label": "度小美-标准女主播", "color": "" },
+			{ "value": "1", "label": "度小宇-亲切男声", "color": "" },
+			{ "value": "3", "label": "度逍遥-情感男声", "color": "" },
+			{ "value": "4", "label": "度丫丫-童声", "color": "" }
+		],
+		"精品音库": [
+			{ "value": "5003", "label": "度逍遥-情感男声", "color": "#0000ff" },
+			{ "value": "5118", "label": "度小鹿-甜美女声", "color": "#0000ff" },
+			{ "value": "106", "label": "度博文-专业男主播", "color": "#0000ff" },
+			{ "value": "103", "label": "度米朵-可爱童声", "color": "#0000ff" },
+			{ "value": "110", "label": "度小童-童声主播", "color": "#0000ff" },
+			{ "value": "111", "label": "度小萌-软萌妹子", "color": "#0000ff" },
+			{ "value": "5", "label": "度小娇-成熟女主播", "color": "#0000ff" }
+		],
+		"臻品音库": [
+			{ "value": "4003", "label": "度逍遥-情感男声", "color": "#ff00ff" },
+			{ "value": "4106", "label": "度博文-专业男主播", "color": "#ff00ff" },
+			{ "value": "4115", "label": "度小贤-电台男主播", "color": "#ff00ff" },
+			{ "value": "5147", "label": "度常盈-电台女主播", "color": "#ff00ff" },
+			{ "value": "5976", "label": "度小皮-萌娃童声", "color": "#ff00ff" },
+			{ "value": "5971", "label": "度皮特-老外男声", "color": "#ff00ff" },
+			{ "value": "4164", "label": "度阿肯-主播男声", "color": "#ff00ff" },
+			{ "value": "4176", "label": "度有为-磁性男声", "color": "#ff00ff" },
+			{ "value": "4259", "label": "度小新-播音女声", "color": "#ff00ff" },
+			{ "value": "4119", "label": "度小鹿-甜美女声", "color": "#ff00ff" },
+			{ "value": "4105", "label": "度灵儿-清澈女声", "color": "#ff00ff" },
+			{ "value": "4117", "label": "度小乐-活泼女声", "color": "#ff00ff" },
+			{ "value": "4288", "label": "度晴岚-甜美女声", "color": "#ff00ff" },
+			{ "value": "4192", "label": "度青巧-温柔男声", "color": "#ff00ff" },
+			{ "value": "4100", "label": "度小雯-活力女主播", "color": "#ff00ff" },
+			{ "value": "4103", "label": "度米朵-可爱女声", "color": "#ff00ff" },
+			{ "value": "4144", "label": "度姐姐-娱乐女声", "color": "#ff00ff" },
+			{ "value": "4278", "label": "度小贝-知识女主播", "color": "#ff00ff" },
+			{ "value": "4143", "label": "度清风-配音男声", "color": "#ff00ff" },
+			{ "value": "4140", "label": "度小新-专业女主播", "color": "#ff00ff" },
+			{ "value": "4129", "label": "度小彦-知识男主播", "color": "#ff00ff" },
+			{ "value": "4149", "label": "度星河-广告男声", "color": "#ff00ff" },
+			{ "value": "4254", "label": "度小清-广告女声", "color": "#ff00ff" },
+			{ "value": "4206", "label": "度博文-综艺男声", "color": "#ff00ff" },
+			{ "value": "4147", "label": "度云朵-可爱童声", "color": "#ff00ff" },
+			{ "value": "4141", "label": "度婉婉-甜美女声", "color": "#ff00ff" },
+			{ "value": "4226", "label": "南方-电台女主播", "color": "#ff00ff" },
+			{ "value": "6205", "label": "度悠然-旁白男声", "color": "#ff00ff" },
+			{ "value": "6221", "label": "度云莺-旁白女声", "color": "#ff00ff" },
+			{ "value": "6546", "label": "度清豪-逍遥侠客", "color": "#ff00ff" },
+			{ "value": "6602", "label": "度清柯-温柔男神", "color": "#ff00ff" },
+			{ "value": "6562", "label": "度雨桑-元气少女", "color": "#ff00ff" },
+			{ "value": "6543", "label": "度雨茜-邻家女孩", "color": "#ff00ff" },
+			{ "value": "6747", "label": "度书夏-情感男声", "color": "#ff00ff" },
+			{ "value": "6748", "label": "度书严-沉稳男声", "color": "#ff00ff" },
+			{ "value": "6746", "label": "度书陆-沉稳男声", "color": "#ff00ff" },
+			{ "value": "6644", "label": "度书宝-亲和女声", "color": "#ff00ff" },
+			{ "value": "4148", "label": "度小夏-甜美女声", "color": "#ff00ff" },
+			{ "value": "4277", "label": "西贝-脱口秀女声", "color": "#ff00ff" },
+			{ "value": "4114", "label": "阿龙-说书男声", "color": "#ff00ff" },
+			{ "value": "5153", "label": "度常悦-民生女主播", "color": "#ff00ff" },
+			{ "value": "6561", "label": "度小乐-可爱童声", "color": "#ff00ff" }
+		]
+	};
+	
+	// 动态加载声音角色选项
+	function loadVoiceOptions() {
+		var select = $("#node-input-per");
+		var currentValue = select.val(); // 保存当前选中的值
+		
+		select.empty(); // 清空现有选项
+		
+		// 遍历分类
+		$.each(VOICE_OPTIONS, function(category, voices) {
+			// 添加分类标题（禁用选择）
+			select.append($('<option disabled>').text('------------ ' + category + ' ------------'));
+			
+			// 添加该分类下的所有声音
+			$.each(voices, function(index, voice) {
+				var option = $('<option>')
+					.val(voice.value)
+					.text(voice.label);
+				
+				// 如果有颜色设置，添加样式
+				if (voice.color) {
+					option.css('color', voice.color);
+				}
+				
+				select.append(option);
+			});
+		});
+		
+		// 恢复之前选中的值
+		if (currentValue) {
+			select.val(currentValue);
 		}
 	}
 </script>
